@@ -1,8 +1,21 @@
 #include "gop_ftp.h"
+#include <stdio.h>
 #include <string.h>
 
 char cwd[MAX_SIZE] = {0};
 
+
+void show_help()
+{
+    printf("\t-c / --client \t- To run FTP client\n");
+    printf("\t-s /--server \t- To run FTP Server\n");
+    printf("\t-h /--help \t- To show help content\n");
+    printf("\tls \t\t- To get list of files in FTP Server \n");
+    printf("\tcd \t\t- To change cureent working directory in FTP Server \n");
+    printf("\tput \t\t- To upload a file to FTP Server \n");
+    printf("\tget \t\t- To download a file to FTP Server \n");
+
+}
 void handle_client(int sockfd)
 {
     char buf[MAX_SIZE] = {0};
@@ -261,11 +274,20 @@ int main(int argc, char *argv[])
     if(argc < TWO_ARGS)
     {
         printf("[Gop_FTP] Addtional param to decide server/client required\n");
+        show_help();
         return FAILURE;
+    }
+    
+    // To show help content
+    if( !strncmp(argv[1], "-h",  strlen(argv[1])) || !strncmp(argv[1], "--help",  strlen(argv[1])))
+    {
+        printf("[Gop_FTP] supports below comamnds\n");
+        show_help();
+        return SUCCESS;
     }
 
     // Trigger FTP client
-    if( !strncmp(argv[1], "-c", 3) || !strncmp(argv[1], "client", 6))
+    if( !strncmp(argv[1], "-c",  strlen(argv[1])) || !strncmp(argv[1], "--client", strlen(argv[1])))
     {
         printf("[Gop_FTP] Decided to run client\n");
         ret = run_client();
@@ -276,7 +298,7 @@ int main(int argc, char *argv[])
     }
 
     //Trigger FTP server
-    if( !strncmp(argv[1], "-s", 3) || !strncmp(argv[1], "server", 7))
+    if( !strncmp(argv[1], "-s",  strlen(argv[1])) || !strncmp(argv[1], "--server",  strlen(argv[1])))
     {
         printf("[Gop_FTP] Decided to run server\n");
         ret = run_server();
